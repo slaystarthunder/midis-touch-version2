@@ -1,11 +1,11 @@
 package music;
 
 public class ChordTrack extends Track {
-    private byte key, bpm, numberOfBars;
+    private byte key, numberOfBars;
     byte[][][] midiSequenceArray;
 
-    public ChordTrack(byte keyIn, byte bpmIn, byte numberOfBarsIn, byte[][][] midiSequenceArrayIn){
-        super(bpmIn,keyIn,numberOfBarsIn);
+    public ChordTrack(byte keyIn, byte numberOfBarsIn, byte[][][] midiSequenceArrayIn){
+        super(keyIn,numberOfBarsIn);
         super.setMidiSequence(midiSequenceArrayIn);
 
 
