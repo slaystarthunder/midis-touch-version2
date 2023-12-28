@@ -1,12 +1,11 @@
 package music;
 
 public abstract class Track {
-    private byte key, numberOfBars;
+    private byte numberOfBars;
 
     public byte[][][] midiSequenceArray;
 
-    protected Track(byte keyIn, byte numberOfBarsIn){
-        key = keyIn;
+    protected Track(byte numberOfBarsIn){
         numberOfBars = numberOfBarsIn;
 
 
