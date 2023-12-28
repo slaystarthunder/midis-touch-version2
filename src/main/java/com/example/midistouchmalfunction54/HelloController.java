@@ -48,7 +48,7 @@ public class HelloController {
 
             System.out.println("This is the bpm: " + bpm + "!");
             // play the track with the bpm and chord
-            //player.playSong(chordTrack, bpm);
+            player.playSong(chordTrack, bpm);
         }
     }
 

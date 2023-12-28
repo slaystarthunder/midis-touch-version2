@@ -68,32 +68,36 @@ public class TrackGenerator {
 
     // generates a chord progression track
     private static byte[][][] makeChordTrack(byte key, byte numberOfBars) {
-        byte[] majorChordProgression = new byte[]{0, 3, 4};
-        // scale array covering 2 octaves
-        byte[] scaleArray = new byte[24];
+        // defining the intervals of a major chord progression
+        byte[] majorScaleIntervals = {2, 2, 1, 2, 2, 2, 1};
 
-        // filling the scale array for two octaves
-        for (int i = 0; i < scaleArray.length; i++) {
-            scaleArray[i] = (byte) ((key + i) % 24);
+        // array to select root note for chords from index in scale array
+        byte[] majorChordProgression = new byte[]{0, 3, 4};
+
+        // scale array covering 1 octave
+        byte[] scaleArray = new byte[7];
+
+        // define a root note at 0 which is transposed upon play
+        scaleArray[0] = 0;
+
+        // filling the scale array according to the pattern defined in majorScaleIntervals
+        for (int i = 1; i < scaleArray.length; i++) {
+            scaleArray[i] = (byte) (scaleArray[i - 1] + majorScaleIntervals[i - 1]);
         }
 
-        // assuming 4 chords per bar
+        // number of bars, 4 chords per bar, 3 notes in a chord
         byte[][][] midiSequenceArray = new byte[numberOfBars][4][3];
-        // starting at 0, using scaleArray indices
-        byte currentKey = 0;
 
         // generating chords for each bar
         for (int bar = 0; bar < numberOfBars; bar++) {
-            // assuming 4 beats per bar
             for (int beat = 0; beat < 4; beat++) {
-                byte root = scaleArray[(currentKey + key) % 24];
-                byte third = scaleArray[(currentKey + key + 4) % 24];
-                byte fifth = scaleArray[(currentKey + key + 7) % 24];
+                int chordIndex = majorChordProgression[beat % majorChordProgression.length];
+                byte root = scaleArray[chordIndex % scaleArray.length];
+                byte third = scaleArray[(chordIndex + 2) % scaleArray.length];
+                byte fifth = scaleArray[(chordIndex + 4) % scaleArray.length];
 
                 midiSequenceArray[bar][beat] = new byte[]{root, third, fifth};
 
-                // update current key based on chord progression
-                currentKey = (byte) ((currentKey + majorChordProgression[beat % majorChordProgression.length]) % 24);
             }
         }
 
