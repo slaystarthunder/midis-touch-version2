@@ -36,7 +36,7 @@ public class HelloController {
         byte key = noteToMidiValue(keySpinner.getValue());
 
         // generate track with bpm and key (NOT YET set, TO DO!), 4 bars assumed right now
-        generatedTracks = TrackGenerator.generateTracks(bpm, key, (byte) 4);
+        generatedTracks = TrackGenerator.generateTracks(key, (byte) 4);
     }
 
     @FXML
@@ -46,8 +46,9 @@ public class HelloController {
             // this doesn't work yet, but the value will come fom the spinner
             byte bpm = bpmSpinner.getValue().byteValue();
 
+            System.out.println("This is the bpm: " + bpm + "!");
             // play the track with the bpm and chord
-            player.playSong(chordTrack, bpm);
+            //player.playSong(chordTrack, bpm);
         }
     }
 

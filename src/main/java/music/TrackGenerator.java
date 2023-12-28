@@ -59,15 +59,15 @@ import java.util.Random;
 public class TrackGenerator {
 
     // generates an array of Tracks (ChordTrack and MelodyTrack) based on bpm, key, and numberOfBars
-    public static Track[] generateTracks(byte bpm, byte key, byte numberOfBars) {
+    public static Track[] generateTracks(byte key, byte numberOfBars) {
         return new Track[]{
-                new ChordTrack(bpm, key, numberOfBars, TrackGenerator.makeChordTrack(bpm, key, numberOfBars)),
-                new MelodyTrack(bpm, key, numberOfBars, TrackGenerator.makeMelodyTrack(bpm, key, numberOfBars))
+                new ChordTrack(key, numberOfBars, TrackGenerator.makeChordTrack(key, numberOfBars)),
+                new MelodyTrack(key, numberOfBars, TrackGenerator.makeMelodyTrack(key, numberOfBars))
         };
     }
 
     // generates a chord progression track
-    private static byte[][][] makeChordTrack(byte bpm, byte key, byte numberOfBars) {
+    private static byte[][][] makeChordTrack(byte key, byte numberOfBars) {
         byte[] majorChordProgression = new byte[]{0, 3, 4};
         // scale array covering 2 octaves
         byte[] scaleArray = new byte[24];
@@ -102,7 +102,7 @@ public class TrackGenerator {
     }
 
     // generates a melody track
-    private static byte[][][] makeMelodyTrack(byte bpm, byte key, byte numberOfBars) {
+    private static byte[][][] makeMelodyTrack(byte key, byte numberOfBars) {
         Random rand = new Random();
         byte[] majorChordProgression = {(byte) 0, (byte) 3, (byte) 4, (byte) 5};
         byte[] scaleArray = {key, (byte) (key + 2), (byte) (key + 4), (byte) (key + 5), (byte) (key + 7), (byte) (key + 9), (byte) (key + 11)};
