@@ -31,7 +31,7 @@ public class HelloController {
 
     @FXML
     protected void onGenerateButtonClick() {
-        byte bpm = bpmSpinner.getValue().byteValue();
+        int bpm = bpmSpinner.getValue();
         // converts key string to MIDI note byte value
         byte key = noteToMidiValue(keySpinner.getValue());
 
@@ -44,11 +44,11 @@ public class HelloController {
         if (generatedTracks != null && generatedTracks.length > 0) {
             byte[][][] chordTrack = generatedTracks[0].midiSequenceArray;
             // this doesn't work yet, but the value will come fom the spinner
-            byte bpm = bpmSpinner.getValue().byteValue();
+            int bpm = bpmSpinner.getValue();
 
             System.out.println("This is the bpm: " + bpm + "!");
             // play the track with the bpm and chord
-            player.playSong(chordTrack, bpm);
+            // player.playSong(chordTrack, bpm);
         }
     }
 

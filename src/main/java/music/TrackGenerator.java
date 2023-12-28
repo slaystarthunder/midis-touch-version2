@@ -72,7 +72,7 @@ public class TrackGenerator {
         byte[] majorScaleIntervals = {2, 2, 1, 2, 2, 2, 1};
 
         // array to select root note for chords from index in scale array
-        byte[] majorChordProgression = new byte[]{0, 3, 4};
+        byte[] majorChordProgression = {0, 3, 4};
 
         // scale array covering 1 octave
         byte[] scaleArray = new byte[7];
