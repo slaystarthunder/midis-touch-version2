@@ -59,15 +59,15 @@ import java.util.Random;
 public class TrackGenerator {
 
     // generates an array of Tracks (ChordTrack and MelodyTrack) based on bpm, key, and numberOfBars
-    public static Track[] generateTracks(byte key, byte numberOfBars) {
+    public static Track[] generateTracks(byte numberOfBars) {
         return new Track[]{
-                new ChordTrack(key, numberOfBars, TrackGenerator.makeChordTrack(key, numberOfBars)),
-                new MelodyTrack(key, numberOfBars, TrackGenerator.makeMelodyTrack(key, numberOfBars))
+                new ChordTrack(numberOfBars, TrackGenerator.makeChordTrack(numberOfBars)),
+                new MelodyTrack(numberOfBars, TrackGenerator.makeMelodyTrack(numberOfBars))
         };
     }
 
     // generates a chord progression track
-    private static byte[][][] makeChordTrack(byte key, byte numberOfBars) {
+    private static byte[][][] makeChordTrack(byte numberOfBars) {
         // defining the intervals of a major chord progression
         byte[] majorScaleIntervals = {2, 2, 1, 2, 2, 2, 1};
 
@@ -106,30 +106,25 @@ public class TrackGenerator {
     }
 
     // generates a melody track
-    private static byte[][][] makeMelodyTrack(byte key, byte numberOfBars) {
+    private static byte[][][] makeMelodyTrack(byte numberOfBars) {
+        // initialize random object for easy melody creation
         Random rand = new Random();
-        byte[] majorChordProgression = {(byte) 0, (byte) 3, (byte) 4, (byte) 5};
-        byte[] scaleArray = {key, (byte) (key + 2), (byte) (key + 4), (byte) (key + 5), (byte) (key + 7), (byte) (key + 9), (byte) (key + 11)};
-        byte[][][] midiSequenceArray = new byte[4][4][1];
-        byte currentKey = key;
-        int index = 0;
-        int c = 0;
-        int row = 0;
-        int col = 0;
 
-        while (c < numberOfBars) {
-            index = rand.nextInt(scaleArray.length);
-            midiSequenceArray[row][col][0] = scaleArray[index];
-            col++;
+        // using an agnostic major scale which is transposed upon play
+        byte[] majorScale = {0, 2, 4, 5, 7, 11};
 
-            // increment counter to progress through bars
-            c++;
-            if (col == 4) {
-                row++;
-                col = 0;
+        // initializing 3d byte array to store the melody in, [noOfBars][beatsInBar][notesPerBar]
+        byte[][][] midiSequenceArray = new byte[numberOfBars][4][1];
+
+        // generate melody notes for each bar, inner loop generates notes for each beat
+        for (int bar = 0; bar < numberOfBars; bar++) {
+            for (int beat = 0; beat < 4; beat++) {
+                byte note = majorScale[rand.nextInt(majorScale.length)];
+                midiSequenceArray[bar][beat][0] = note;
             }
         }
 
+        System.out.println(Arrays.deepToString(midiSequenceArray));
         return midiSequenceArray;
     }
 
