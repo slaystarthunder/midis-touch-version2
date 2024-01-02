@@ -4,7 +4,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
 import music.PlaySong;
-import music.Track;
+import music.MusicSequencer;
 import music.TrackGenerator;
 
 public class HelloController {
@@ -14,7 +14,7 @@ public class HelloController {
     private Spinner<String> keySpinner;
 
     // field to store the generated tracks
-    private Track[] generatedTracks;
+    private MusicSequencer[] generatedMusicSequencers;
 
     // instance of PlaySong class to play the song
     private PlaySong player = new PlaySong();
@@ -36,13 +36,13 @@ public class HelloController {
         byte key = noteToMidiValue(keySpinner.getValue());
 
         // generate track with bpm and key (NOT YET set, TO DO!), 4 bars assumed right now
-        generatedTracks = TrackGenerator.generateTracks((byte) 4);
+        generatedMusicSequencers = TrackGenerator.generateTracks((byte) 4);
     }
 
     @FXML
     protected void onPlayButtonClick() {
-        if (generatedTracks != null && generatedTracks.length > 0) {
-            byte[][][] chordTrack = generatedTracks[0].midiSequenceArray;
+        if (generatedMusicSequencers != null && generatedMusicSequencers.length > 0) {
+            byte[][][] chordTrack = generatedMusicSequencers[0].midiSequenceArray;
             // this doesn't work yet, but the value will come fom the spinner
             int bpm = bpmSpinner.getValue();
 

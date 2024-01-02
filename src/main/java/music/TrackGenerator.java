@@ -7,10 +7,10 @@ import java.util.Random;
 public class TrackGenerator {
 
     // generates an array of Tracks (ChordTrack and MelodyTrack) based on bpm, key, and numberOfBars
-    public static Track[] generateTracks(byte numberOfBars) {
-        return new Track[]{
-                new ChordTrack(numberOfBars, TrackGenerator.makeChordTrack(numberOfBars)),
-                new MelodyTrack(numberOfBars, TrackGenerator.makeMelodyTrack(numberOfBars))
+    public static MusicSequencer[] generateTracks(byte numberOfBars) {
+        return new MusicSequencer[]{
+                new ChordMusicSequencer(numberOfBars, TrackGenerator.makeChordTrack(numberOfBars)),
+                new MelodyMusicSequencer(numberOfBars, TrackGenerator.makeMelodyTrack(numberOfBars))
         };
     }
 

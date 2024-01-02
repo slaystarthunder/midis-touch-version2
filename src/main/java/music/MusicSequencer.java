@@ -1,11 +1,11 @@
 package music;
 
-public abstract class Track {
+public abstract class MusicSequencer {
     private byte numberOfBars;
 
     public byte[][][] midiSequenceArray;
 
-    protected Track(byte numberOfBarsIn){
+    protected MusicSequencer(byte numberOfBarsIn){
         numberOfBars = numberOfBarsIn;
 
 
