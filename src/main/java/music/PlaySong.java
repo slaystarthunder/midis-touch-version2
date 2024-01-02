@@ -5,8 +5,10 @@ import javax.sound.midi.*;
 public class PlaySong {
 
     public void playSong(byte[][][][] tracks, int bpm, int baseMidiNote, int chordNoteLength, int melodyNoteLength) {
+        System.out.println("playSong called, with BPM");
+        Sequencer sequencer = null;
         try {
-            Sequencer sequencer = MidiSystem.getSequencer();
+            sequencer = MidiSystem.getSequencer();
             sequencer.open();
 
             Sequence sequence = new Sequence(Sequence.PPQ, 4);
@@ -25,13 +27,21 @@ public class PlaySong {
             // start playback
             sequencer.setSequence(sequence);
             sequencer.start();
+            System.out.println("Sequencer started as it should");
 
             // wait for playback to finish
-            while (sequencer.isOpen()) {
+            while (sequencer.isRunning()) {
                 Thread.sleep(1000);
             }
+            System.out.println("Sequencer successfully started");
         } catch (Exception e) {
+            System.out.println("Error ocurred in playSong" + e.getMessage());
             e.printStackTrace();
+        } finally {
+            if (sequencer != null && sequencer.isOpen()) {
+                sequencer.close();
+                System.out.println("Sequencer closed successfully");
+            }
         }
     }
 
