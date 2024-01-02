@@ -13,7 +13,7 @@ public class HelloController {
     // define constans for note length:
 
     private static final int MELODY_NOTE_LENGTH = 2;
-    private static final int CHORD_NOTE_LENGTH = 16;
+    private static final int CHORD_NOTE_LENGTH = 2;
 
     @FXML
     private Spinner<Integer> bpmSpinner;
