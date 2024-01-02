@@ -6,8 +6,15 @@ import javafx.scene.control.SpinnerValueFactory;
 import music.PlaySong;
 import music.MusicSequencer;
 import music.TrackGenerator;
+import utilities.MidiUtils;
 
 public class HelloController {
+
+    // define constans for note length:
+
+    private static final int MELODY_NOTE_LENGTH = 2;
+    private static final int CHORD_NOTE_LENGTH = 16;
+
     @FXML
     private Spinner<Integer> bpmSpinner;
     @FXML
@@ -33,31 +40,27 @@ public class HelloController {
     protected void onGenerateButtonClick() {
         int bpm = bpmSpinner.getValue();
         // converts key string to MIDI note byte value
-        byte key = noteToMidiValue(keySpinner.getValue());
+        byte key = (byte) MidiUtils.noteToMidiValue(keySpinner.getValue());
 
         // generate track with bpm and key (NOT YET set, TO DO!), 4 bars assumed right now
-        generatedMusicSequencers = TrackGenerator.generateTracks((byte) 4);
+        generatedMusicSequencers = TrackGenerator.generateTracks((byte) 4, CHORD_NOTE_LENGTH, MELODY_NOTE_LENGTH);
     }
 
     @FXML
     protected void onPlayButtonClick() {
-        if (generatedMusicSequencers != null && generatedMusicSequencers.length > 0) {
+        if (generatedMusicSequencers != null && generatedMusicSequencers.length > 1) {
             byte[][][] chordTrack = generatedMusicSequencers[0].midiSequenceArray;
-            // this doesn't work yet, but the value will come fom the spinner
+            byte[][][] melodyTrack = generatedMusicSequencers[1].midiSequenceArray;
+            // use the BPM value from the spinner
             int bpm = bpmSpinner.getValue();
+            // get base MIDI note from the spinner
+            int baseMidiNote = MidiUtils.noteToMidiValue(keySpinner.getValue());
 
-            System.out.println("This is the bpm: " + bpm + "!");
-            // play the track with the bpm and chord
-            // player.playSong(chordTrack, bpm);
+
+            // play the music using the stored tracks and BPM
+
+            player.playSong(new byte[][][][]{chordTrack, melodyTrack}, bpm, baseMidiNote, CHORD_NOTE_LENGTH, MELODY_NOTE_LENGTH);
+            System.out.println("BPM value from GUI: " + bpm + ", Key: " + baseMidiNote);
         }
-    }
-
-
-    private byte noteToMidiValue(String noteName) {
-        // implement this method to convert note names to MIDI values
-        // example:
-        // if (noteName.equals("C")) return 60;
-        // add other notes as needed
-        return 60; // default to Middle C octave 4
     }
 }

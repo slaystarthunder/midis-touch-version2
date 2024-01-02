@@ -1,59 +1,61 @@
 package music;
 
 import javax.sound.midi.*;
-import javax.sound.midi.Track;
 
 public class PlaySong {
 
-    public void playSong(byte[][][] chords, int bpm) {
+    public void playSong(byte[][][][] tracks, int bpm, int baseMidiNote, int chordNoteLength, int melodyNoteLength) {
         try {
             Sequencer sequencer = MidiSystem.getSequencer();
             sequencer.open();
 
             Sequence sequence = new Sequence(Sequence.PPQ, 4);
-            Track track = sequence.createTrack();
 
-            int tick = 0;
-            // 60 = middle C in the fourth octave as base note (will be changeable later)
-            int baseMidiNote = 60;
-            for (byte[][] bar : chords) {
-                for (byte[] chord : bar) {
-                    for (byte note : chord) {
-                        // conversion to correct octave in MIDI table
-                        int midiNote = note + baseMidiNote;
-                        // add NOTE_ON event for each note in the chord
-                        track.add(createNoteEvent(ShortMessage.NOTE_ON, midiNote, 100, tick));
-                    }
-                    // tick increment based on duration of chord
-                    tick += 4;
-                    for (byte note : chord) {
-                        // conversion to correct octave in MIDI table
-                        int midiNote = note + baseMidiNote;
-                        // adding NOTE_OFF event for each note in chord
-                        track.add(createNoteEvent(ShortMessage.NOTE_OFF, midiNote, 100, tick));
-                    }
-                }
+            // loop through each track and add it to the sequence
+            for (int i = 0; i < tracks.length; i++) {
+                Track musicSequencer = sequence.createTrack();
+                // use chord length for first track, melody length for others
+                int noteLength = i == 0 ? chordNoteLength : melodyNoteLength;
+                addNotesToTrack(musicSequencer, tracks[i], baseMidiNote, noteLength);
             }
 
-            // set tempo based on BPM with MIDI calculation
-            MetaMessage tempoMeta = new MetaMessage();
-            int tempo = 60000000 / bpm;
-            tempoMeta.setMessage(0x51, new byte[]{(byte) (tempo >> 16), (byte) (tempo >> 8), (byte) tempo}, 3);
-            track.add(new MidiEvent(tempoMeta, 0));
+            // set tempo based on BPM
+            setTempo(sequence, bpm);
 
-            sequencer.addMetaEventListener(meta -> {
-                if (meta.getType() == 47) {
-                    sequencer.close();
-                }
-            });
-
+            // start playback
             sequencer.setSequence(sequence);
             sequencer.start();
 
+            // wait for playback to finish
             while (sequencer.isOpen()) {
                 Thread.sleep(1000);
             }
         } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void addNotesToTrack(Track musicSequencer, byte[][][] notes, int baseMidiNote, int noteLength) {
+        int tick = 0;
+        for (byte[][] bar : notes) {
+            for (byte[] chord : bar) {
+                for (byte note : chord) {
+                    int midiNote = note + baseMidiNote;
+                    musicSequencer.add(createNoteEvent(ShortMessage.NOTE_ON, midiNote, 100, tick));
+                    musicSequencer.add(createNoteEvent(ShortMessage.NOTE_OFF, midiNote, 100, tick + 16));
+                }
+                tick += noteLength;
+            }
+        }
+    }
+
+    private void setTempo(Sequence sequence, int bpm) {
+        try {
+            MetaMessage tempoMeta = new MetaMessage();
+            int tempo = 60000000 / bpm;
+            tempoMeta.setMessage(0x51, new byte[]{(byte) (tempo >> 16), (byte) (tempo >> 8), (byte) tempo}, 3);
+            sequence.getTracks()[0].add(new MidiEvent(tempoMeta, 0));
+        } catch (InvalidMidiDataException e) {
             e.printStackTrace();
         }
     }
