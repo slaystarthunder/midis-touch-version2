@@ -1,10 +1,10 @@
 package music;
 
-public class MelodyTrack extends Track {
+public class MelodyMusicSequencer extends MusicSequencer {
     private byte numberOfBars;
     byte[][][] midiSequenceArray;
 
-    public MelodyTrack(byte numberOfBarsIn, byte[][][] midiSequenceArrayIn) {
+    public MelodyMusicSequencer(byte numberOfBarsIn, byte[][][] midiSequenceArrayIn) {
         super(numberOfBarsIn);
         super.setMidiSequence(midiSequenceArrayIn);
 
